@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1726055837 source:d:\dsa\gameonline\gameonline.cpp
+	<iostream>
+
+1726062585 source:d:\dsa\gameonline\main.cpp
+	<iostream>
+

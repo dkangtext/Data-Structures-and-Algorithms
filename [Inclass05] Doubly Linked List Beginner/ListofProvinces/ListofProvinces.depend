@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1727247771 source:d:\dsa\listofprovinces\main.cpp
+	<iostream>
+	<cstring>
+	<string>
+
