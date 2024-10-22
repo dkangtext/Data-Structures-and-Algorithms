@@ -9,7 +9,7 @@ using
 #include <string>
 using namespace std;
 
-// ###INSERT CODE HERE -
+//###INSERT CODE HERE -
 
 struct node
 {
@@ -23,17 +23,17 @@ struct List
     node *pTail;
 };
 
+void Init(List &L)
+{
+    L.pHead = L.pTail = NULL;
+}
+
 node *getnode(int x)
 {
     node *p = new node;
     p->info = x;
     p->next = NULL;
     return p;
-}
-
-void Init(List &L)
-{
-    L.pHead = L.pTail = NULL;
 }
 
 void inputList(List &L, int n)
@@ -58,7 +58,11 @@ void inputList(List &L, int n)
 void outputList(List L)
 {
     node *p = L.pHead;
-    if (p != NULL)
+    if (p == NULL)
+    {
+        cout << "List is empty";
+    }
+    else
     {
         while (p != NULL)
         {
@@ -66,44 +70,39 @@ void outputList(List L)
             p = p->next;
         }
     }
-    else
-        cout << "List is empty";
 }
 
-node *findMax(List L)
+void moveLastToFront(List &L)
 {
-    if (L.pHead == NULL)
+    if (L.pHead == NULL || L.pHead == L.pTail)
     {
-        cout << "List is empty";
-        return NULL;
+        return;
     }
+
     node *p = L.pHead;
-    node *max = p;
-    while (p != NULL)
+    while (p->next != L.pTail)
     {
-        if (p->info > max->info)
-            max = p;
         p = p->next;
     }
-    return max;
+
+    p->next = NULL;
+    L.pTail->next = L.pHead;
+    L.pHead = L.pTail;
+    L.pTail = p;
 }
 
 int main()
 {
     List L;
-    Init(L);
-    int n;
-    cout << "Enter a number: ";
-    cin >> n;
-    cout << "\nEnter a sequence of " << n << " numbers: ";
-    inputList(L, n);
-    cout << "\nThe created Linked List: ";
+    L.pHead=L.pTail=NULL;
+    int n; cin>>n;
+    inputList(L,n);
+    cout<<"Created List: "<<endl;
     outputList(L);
+    cout<<endl;
 
-    cout << "\nThe maximum value: ";
-    node *p = findMax(L);
-    if (p)
-        cout << p->info;
-
+    moveLastToFront(L); //di chuyen node cuoi ve dau danh sach
+    cout<<"Updated List after moving the last element to front of L: "<<endl;
+    outputList(L);
     return 0;
 }

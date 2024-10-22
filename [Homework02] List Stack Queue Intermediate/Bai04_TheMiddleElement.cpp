@@ -9,7 +9,7 @@ using
 #include <string>
 using namespace std;
 
-// ###INSERT CODE HERE -
+//###INSERT CODE HERE -
 
 struct node
 {
@@ -58,52 +58,44 @@ void inputList(List &L, int n)
 void outputList(List L)
 {
     node *p = L.pHead;
-    if (p != NULL)
-    {
-        while (p != NULL)
-        {
-            cout << p->info << " ";
-            p = p->next;
-        }
-    }
-    else
-        cout << "List is empty";
-}
-
-node *findMax(List L)
-{
-    if (L.pHead == NULL)
+    if (p == NULL)
     {
         cout << "List is empty";
-        return NULL;
+        return;
     }
-    node *p = L.pHead;
-    node *max = p;
-    while (p != NULL)
+    while (p)
     {
-        if (p->info > max->info)
-            max = p;
+        cout << p->info << " ";
         p = p->next;
     }
-    return max;
+}
+
+node *findMiddle(List L)
+{
+    node *p = L.pHead;
+    node *q = L.pHead;
+    if (p == NULL)
+        return NULL;
+    while (q && q->next)
+    {
+        p = p->next;
+        q = q->next->next;
+    }
+    return p;
 }
 
 int main()
 {
     List L;
-    Init(L);
-    int n;
-    cout << "Enter a number: ";
-    cin >> n;
-    cout << "\nEnter a sequence of " << n << " numbers: ";
-    inputList(L, n);
-    cout << "\nThe created Linked List: ";
+    L.pHead=L.pTail=NULL;
+    int n; cin>>n;
+    inputList(L,n);
+    cout<<"Created List: "<<endl;
     outputList(L);
+    cout<<endl;
 
-    cout << "\nThe maximum value: ";
-    node *p = findMax(L);
-    if (p)
-        cout << p->info;
+    node *p=findMiddle(L); //Neu so phan tu chan thi co 2 phan tu chinh giua, chi xuat phan tu chinh giua thu 2
+    if(p)cout<<"The middle element is "<<p->info;
 
     return 0;
 }

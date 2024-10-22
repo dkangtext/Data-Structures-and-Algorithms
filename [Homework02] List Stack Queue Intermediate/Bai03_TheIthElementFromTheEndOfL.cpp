@@ -58,34 +58,45 @@ void inputList(List &L, int n)
 void outputList(List L)
 {
     node *p = L.pHead;
-    if (p != NULL)
+    if (p == NULL)
     {
-        while (p != NULL)
-        {
-            cout << p->info << " ";
-            p = p->next;
-        }
-    }
-    else
         cout << "List is empty";
+        return;
+    }
+    while (p)
+    {
+        cout << p->info << " ";
+        p = p->next;
+    }
 }
 
-node *findMax(List L)
+node *findElementFromEnd(List L, int i)
 {
     if (L.pHead == NULL)
     {
         cout << "List is empty";
         return NULL;
     }
+
     node *p = L.pHead;
-    node *max = p;
-    while (p != NULL)
+    node *q = L.pHead;
+
+    for (int j = 0; j < i; j++)
     {
-        if (p->info > max->info)
-            max = p;
-        p = p->next;
+        if (q == NULL)
+        {
+            cout << "The index is invalid";
+            return NULL;
+        }
+        q = q->next;
     }
-    return max;
+
+    while (q)
+    {
+        p = p->next;
+        q = q->next;
+    }
+    return p;
 }
 
 int main()
@@ -100,8 +111,11 @@ int main()
     cout << "\nThe created Linked List: ";
     outputList(L);
 
-    cout << "\nThe maximum value: ";
-    node *p = findMax(L);
+    int i;
+    cout << "\nEnter a number: ";
+    cin >> i;
+    cout << "\nThe element at index " << i << " (from the end of L): ";
+    node *p = findElementFromEnd(L, i);
     if (p)
         cout << p->info;
 
