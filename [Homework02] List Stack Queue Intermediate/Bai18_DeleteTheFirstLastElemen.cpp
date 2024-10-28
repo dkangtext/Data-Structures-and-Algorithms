@@ -4,21 +4,21 @@ include
 using
 ###End banned keyword*/
 
-#include  <iostream>
+#include <iostream>
 using namespace std;
 
 struct DNode
 {
-	int info;
-	DNode *pNext, *pPrev;
+    int info;
+    DNode *pNext, *pPrev;
 };
 
 struct DList
 {
-	DNode *pHead, *pTail;
+    DNode *pHead, *pTail;
 };
 
-//###INSERT CODE HERE -
+// ###INSERT CODE HERE -
 
 void init(DList &L)
 {
@@ -52,6 +52,12 @@ void createList(DList &L)
 
 void printList(DList L)
 {
+    if (L.pHead == NULL)
+    {
+        cout << "List is empty";
+        return;
+    }
+
     for (DNode *p = L.pHead; p != NULL; p = p->pNext)
     {
         cout << p->info << " ";
@@ -94,12 +100,12 @@ void addTail(DList &L, int x)
 
 void addAfter(DList &L, int x, int y)
 {
-    DNode *p = new DNode;
-    p->info = y;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
         {
+            DNode *p = new DNode;
+            p->info = y;
             p->pNext = q->pNext;
             p->pPrev = q;
             if (q->pNext == NULL)
@@ -118,12 +124,12 @@ void addAfter(DList &L, int x, int y)
 
 void addBefore(DList &L, int x, int y)
 {
-    DNode *p = new DNode;
-    p->info = y;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
         {
+            DNode *p = new DNode;
+            p->info = y;
             p->pNext = q;
             p->pPrev = q->pPrev;
             if (q->pPrev == NULL)
@@ -142,8 +148,6 @@ void addBefore(DList &L, int x, int y)
 
 void addAfterMulti(DList &L, int x, int y)
 {
-    DNode *p = new DNode;
-    p->info = y;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
@@ -161,14 +165,13 @@ void addAfterMulti(DList &L, int x, int y)
                 q->pNext->pPrev = tmp;
             }
             q->pNext = tmp;
+            q = tmp;
         }
     }
 }
 
 void addBeforeMulti(DList &L, int x, int y)
 {
-    DNode *p = new DNode;
-    p->info = y;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
@@ -194,102 +197,122 @@ void removeHead(DList &L)
 {
     if (L.pHead == NULL)
     {
+        cout << "\nList is empty. Can't delete";
         return;
     }
-    DNode *p = L.pHead;
-    L.pHead = L.pHead->pNext;
-    if (L.pHead == NULL)
+
+    char confirm;
+    cout << "\nDo you want to delete the first element?(y/n): ";
+    cin >> confirm;
+
+    if (confirm == 'y' || confirm == 'Y')
     {
-        L.pTail = NULL;
+        DNode *p = L.pHead;
+        L.pHead = L.pHead->pNext;
+        if (L.pHead == NULL)
+        {
+            L.pTail = NULL;
+            cout << "\nThe list becomes empty";
+        }
+        else
+        {
+            L.pHead->pPrev = NULL;
+        }
+        delete p;
     }
-    else
-    {
-        L.pHead->pPrev = NULL;
-    }
-    delete p;
 }
 
 void removeTail(DList &L)
 {
     if (L.pTail == NULL)
     {
+        cout << "\nList is empty. Can't delete";
         return;
     }
-    DNode *p = L.pTail;
-    L.pTail = L.pTail->pPrev;
-    if (L.pTail == NULL)
+
+    char confirm;
+    cout << "\nDo you want to delete the last element?(y/n): ";
+    cin >> confirm;
+
+    if (confirm == 'y' || confirm == 'Y')
     {
-        L.pHead = NULL;
+        DNode *p = L.pTail;
+        L.pTail = L.pTail->pPrev;
+        if (L.pTail == NULL)
+        {
+            L.pHead = NULL;
+            cout << "\nThe list becomes empty";
+        }
+        else
+        {
+            L.pTail->pNext = NULL;
+        }
+        delete p;
     }
-    else
-    {
-        L.pTail->pNext = NULL;
-    }
-    delete p;
 }
 
 int main()
 {
-	DList L;
-	init(L);
-	int x,y,choice; char c;
+    DList L;
+    init(L);
+    int x, y, choice;
 
-	cout<<"MENU:";
-    cout<<"\n1. Create a DList";
-    cout<<"\n2. Print the DList";
-    cout<<"\n3. Insert a value at the front";
-    cout<<"\n4. Insert a value at the end";
-    cout<<"\n5. Insert a value after a given value (only for the first value found)";
-    cout<<"\n6. Insert a value before a given value (only for the first value found)";
-    cout<<"\n7. Insert a value after a given value (for all the same values)";
-    cout<<"\n8. Insert a value before a given value (for all the same values)";
-    cout<<"\n9. Delete the first element";
-    cout<<"\n10. Delete the last element";
-    cout<<"\n20. Exit"<<endl;
+    cout << "MENU:";
+    cout << "\n1. Create a DList";
+    cout << "\n2. Print the DList";
+    cout << "\n3. Insert a value at the front";
+    cout << "\n4. Insert a value at the end";
+    cout << "\n5. Insert a value after a given value (only for the first value found)";
+    cout << "\n6. Insert a value before a given value (only for the first value found)";
+    cout << "\n7. Insert a value after a given value (for all the same values)";
+    cout << "\n8. Insert a value before a given value (for all the same values)";
+    cout << "\n9. Delete the first element";
+    cout << "\n10. Delete the last element";
+    cout << "\n20. Exit" << endl;
 
-	while(true)
+    while (true)
     {
-        cout<<"\n\t\tPLEASE SELECT YOUR CHOICE: ";
-        cin>>choice;
-        switch(choice)
+        cout << "\n\t\tPLEASE SELECT YOUR CHOICE: ";
+        cin >> choice;
+        switch (choice)
         {
         case 1:
-            cout<<"\nEnter your positive integers until you enter -1 to finish: ";
+            cout << "\nEnter your positive integers until you enter -1 to finish: ";
             createList(L);
             break;
         case 2:
-            cout<<"\nYour current DList: ";
+            cout << "\nYour current DList: ";
             printList(L);
             break;
         case 3:
-            cout<<"\nEnter a number: ";
-            cin>>x;
-            addHead(L,x);
+            cout << "\nEnter a number: ";
+            cin >> x;
+            addHead(L, x);
             break;
         case 4:
-            cout<<"\nEnter a number: ";
-            cin>>x;
-            addTail(L,x);
+            cout << "\nEnter a number: ";
+            cin >> x;
+            addTail(L, x);
             break;
         case 5:
-            cout<<"\nEnter two numbers: ";
-            cin>>x>>y;
-            addAfter(L,x,y);
+            cout << "\nEnter two numbers: ";
+            cin >> x >> y;
+            addAfter(L, x, y);
             break;
         case 6:
-            cout<<"\nEnter two numbers: ";
-            cin>>x>>y;
-            addBefore(L,x,y);
+            cout << "\nEnter two numbers: ";
+            cin >> x >> y;
+            addBefore(L, x, y);
             break;
         case 7:
-            cout<<"\nEnter two numbers: ";
-            cin>>x>>y;
-            addAfterMulti(L,x,y);
+            cout << "\nEnter two numbers: ";
+            cin >> x >> y;
+            addAfterMulti(L, x, y);
             break;
         case 8:
-            cout<<"\nEnter two numbers: ";
-            cin>>x>>y;
-            addBeforeMulti(L,x,y);
+            cout << "\nEnter two numbers: ";
+            cin >> x >> y;
+            addBeforeMulti(L, x, y);
             break;
         case 9:
             removeHead(L);
@@ -298,11 +321,10 @@ int main()
             removeTail(L);
             break;
         case 20:
-            cout<<"\nGOOD BYE";
+            cout << "\nGOOD BYE";
             return 0;
-
         }
     }
 
-	return 0;
+    return 0;
 }

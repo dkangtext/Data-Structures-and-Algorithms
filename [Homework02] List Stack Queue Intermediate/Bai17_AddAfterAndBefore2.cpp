@@ -52,6 +52,12 @@ void createList(DList &L)
 
 void printList(DList L)
 {
+    if (L.pHead == NULL)
+    {
+        cout << "List is empty";
+        return;
+    }
+
     for (DNode *p = L.pHead; p != NULL; p = p->pNext)
     {
         cout << p->info << " ";
@@ -94,8 +100,9 @@ void addTail(DList &L, int x)
 
 void addAfter(DList &L, int x, int y)
 {
+    DNode *q = L.pHead;
     bool found = false;
-    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
+    while (q != NULL)
     {
         if (q->info == x)
         {
@@ -103,18 +110,15 @@ void addAfter(DList &L, int x, int y)
             p->info = y;
             p->pNext = q->pNext;
             p->pPrev = q;
-            if (q->pNext == NULL)
-            {
-                L.pTail = p;
-            }
-            else
-            {
+            if (q->pNext != NULL)
                 q->pNext->pPrev = p;
-            }
+            else
+                L.pTail = p;
             q->pNext = p;
             found = true;
             break;
         }
+        q = q->pNext;
     }
     if (!found)
     {
@@ -124,8 +128,9 @@ void addAfter(DList &L, int x, int y)
 
 void addBefore(DList &L, int x, int y)
 {
+    DNode *q = L.pHead;
     bool found = false;
-    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
+    while (q != NULL)
     {
         if (q->info == x)
         {
@@ -133,18 +138,15 @@ void addBefore(DList &L, int x, int y)
             p->info = y;
             p->pNext = q;
             p->pPrev = q->pPrev;
-            if (q->pPrev == NULL)
-            {
-                L.pHead = p;
-            }
-            else
-            {
+            if (q->pPrev != NULL)
                 q->pPrev->pNext = p;
-            }
+            else
+                L.pHead = p;
             q->pPrev = p;
             found = true;
             break;
         }
+        q = q->pNext;
     }
     if (!found)
     {
@@ -163,17 +165,13 @@ void addAfterMulti(DList &L, int x, int y)
             p->info = y;
             p->pNext = q->pNext;
             p->pPrev = q;
-            if (q->pNext == NULL)
-            {
-                L.pTail = p;
-            }
-            else
-            {
+            if (q->pNext != NULL)
                 q->pNext->pPrev = p;
-            }
+            else
+                L.pTail = p;
             q->pNext = p;
             found = true;
-            q = p;
+            q = p; 
         }
     }
     if (!found)
@@ -193,14 +191,10 @@ void addBeforeMulti(DList &L, int x, int y)
             p->info = y;
             p->pNext = q;
             p->pPrev = q->pPrev;
-            if (q->pPrev == NULL)
-            {
-                L.pHead = p;
-            }
-            else
-            {
+            if (q->pPrev != NULL)
                 q->pPrev->pNext = p;
-            }
+            else
+                L.pHead = p;
             q->pPrev = p;
             found = true;
         }
