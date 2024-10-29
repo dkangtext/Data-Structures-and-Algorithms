@@ -25,271 +25,6 @@ void init(DList &L)
     L.pHead = L.pTail = NULL;
 }
 
-DNode *createNode(int x)
-{
-    DNode *p = new DNode;
-    if (p == NULL)
-        return NULL;
-    p->info = x;
-    p->pNext = p->pPrev = NULL;
-    return p;
-}
-
-void addHead(DList &L, int x)
-{
-    DNode *p = createNode(x);
-    if (L.pHead == NULL)
-    {
-        L.pHead = L.pTail = p;
-    }
-    else
-    {
-        p->pNext = L.pHead;
-        L.pHead->pPrev = p;
-        L.pHead = p;
-    }
-}
-
-void addTail(DList &L, int x)
-{
-    DNode *p = createNode(x);
-    if (L.pHead == NULL)
-    {
-        L.pHead = L.pTail = p;
-    }
-    else
-    {
-        L.pTail->pNext = p;
-        p->pPrev = L.pTail;
-        L.pTail = p;
-    }
-}
-
-void addAfter(DList &L, int x, int y)
-{
-    DNode *p = createNode(y);
-    DNode *q = L.pHead;
-    while (q != NULL && q->info != x)
-        q = q->pNext;
-    if (q == NULL)
-        return;
-    p->pNext = q->pNext;
-    p->pPrev = q;
-    if (q->pNext != NULL)
-        q->pNext->pPrev = p;
-    q->pNext = p;
-    if (q == L.pTail)
-        L.pTail = p;
-}
-
-void addBefore(DList &L, int x, int y)
-{
-    DNode *p = createNode(y);
-    DNode *q = L.pHead;
-    while (q != NULL && q->info != x)
-        q = q->pNext;
-    if (q == NULL)
-        return;
-    p->pNext = q;
-    p->pPrev = q->pPrev;
-    if (q->pPrev != NULL)
-        q->pPrev->pNext = p;
-    q->pPrev = p;
-    if (q == L.pHead)
-        L.pHead = p;
-}
-
-void addAfterMulti(DList &L, int x, int y)
-{
-    DNode *p = createNode(y);
-    DNode *q = L.pHead;
-    while (q != NULL)
-    {
-        if (q->info == x)
-        {
-            p->pNext = q->pNext;
-            p->pPrev = q;
-            if (q->pNext != NULL)
-                q->pNext->pPrev = p;
-            q->pNext = p;
-            if (q == L.pTail)
-                L.pTail = p;
-        }
-        q = q->pNext;
-    }
-}
-
-void addBeforeMulti(DList &L, int x, int y)
-{
-    DNode *p = createNode(y);
-    DNode *q = L.pHead;
-    while (q != NULL)
-    {
-        if (q->info == x)
-        {
-            p->pNext = q;
-            p->pPrev = q->pPrev;
-            if (q->pPrev != NULL)
-                q->pPrev->pNext = p;
-            q->pPrev = p;
-            if (q == L.pHead)
-                L.pHead = p;
-        }
-        q = q->pNext;
-    }
-}
-
-void removeHead(DList &L)
-{
-    if (L.pHead == NULL)
-        return;
-    DNode *p = L.pHead;
-    L.pHead = L.pHead->pNext;
-    if (L.pHead != NULL)
-        L.pHead->pPrev = NULL;
-    delete p;
-    if (L.pHead == NULL)
-        L.pTail = NULL;
-}
-
-void removeTail(DList &L)
-{
-    if (L.pHead == NULL)
-        return;
-    DNode *p = L.pTail;
-    L.pTail = L.pTail->pPrev;
-    if (L.pTail != NULL)
-        L.pTail->pNext = NULL;
-    delete p;
-    if (L.pTail == NULL)
-        L.pHead = NULL;
-}
-
-void removeNode(DList &L, int x)
-{
-    DNode *p = L.pHead;
-    while (p != NULL && p->info != x)
-        p = p->pNext;
-    if (p == NULL)
-        return;
-    if (p == L.pHead)
-        removeHead(L);
-    else if (p == L.pTail)
-        removeTail(L);
-    else
-    {
-        p->pPrev->pNext = p->pNext;
-        p->pNext->pPrev = p->pPrev;
-        delete p;
-    }
-}
-
-void removeMultiNodeS(DList &L, int x)
-{
-    DNode *p = L.pHead;
-    while (p != NULL)
-    {
-        if (p->info == x)
-        {
-            if (p == L.pHead)
-                removeHead(L);
-            else if (p == L.pTail)
-                removeTail(L);
-            else
-            {
-                p->pPrev->pNext = p->pNext;
-                p->pNext->pPrev = p->pPrev;
-                delete p;
-            }
-        }
-        p = p->pNext;
-    }
-}
-
-void removeAfter(DList &L, int x)
-{
-    DNode *p = L.pHead;
-    while (p != NULL && p->info != x)
-        p = p->pNext;
-    if (p == NULL || p == L.pTail)
-        return;
-    DNode *q = p->pNext;
-    p->pNext = q->pNext;
-    if (q->pNext != NULL)
-        q->pNext->pPrev = p;
-    delete q;
-    if (p->pNext == NULL)
-        L.pTail = p;
-}
-
-void removeBefore(DList &L, int x)
-{
-    DNode *p = L.pHead;
-    while (p != NULL && p->info != x)
-        p = p->pNext;
-    if (p == NULL || p == L.pHead)
-        return;
-    DNode *q = p->pPrev;
-    if (q == L.pHead)
-        removeHead(L);
-    else
-    {
-        q->pPrev->pNext = p;
-        p->pPrev = q->pPrev;
-        delete q;
-    }
-}
-
-void removeMultiAfters(DList &L, int x)
-{
-    DNode *p = L.pHead;
-    while (p != NULL)
-    {
-        if (p->info == x)
-        {
-            if (p == L.pTail)
-                return;
-            DNode *q = p->pNext;
-            p->pNext = q->pNext;
-            if (q->pNext != NULL)
-                q->pNext->pPrev = p;
-            delete q;
-            if (p->pNext == NULL)
-                L.pTail = p;
-        }
-        p = p->pNext;
-    }
-}
-
-void removeMultiBefores(DList &L, int x)
-{
-    DNode *p = L.pHead;
-    while (p != NULL)
-    {
-        if (p->info == x)
-        {
-            if (p == L.pHead)
-                return;
-            DNode *q = p->pPrev;
-            if (q == L.pHead)
-                removeHead(L);
-            else
-            {
-                q->pPrev->pNext = p;
-                p->pPrev = q->pPrev;
-                delete q;
-            }
-        }
-        p = p->pNext;
-    }
-}
-
-void removeAll(DList &L)
-{
-    while (L.pHead != NULL)
-        removeHead(L);
-}
-
 void createList(DList &L)
 {
     int x;
@@ -298,17 +33,588 @@ void createList(DList &L)
         cin >> x;
         if (x == -1)
             break;
-        addTail(L, x);
+        DNode *p = new DNode;
+        p->info = x;
+        p->pNext = NULL;
+        p->pPrev = NULL;
+        if (L.pHead == NULL)
+        {
+            L.pHead = L.pTail = p;
+        }
+        else
+        {
+            L.pTail->pNext = p;
+            p->pPrev = L.pTail;
+            L.pTail = p;
+        }
     }
 }
 
 void printList(DList L)
 {
-    DNode *p = L.pHead;
-    while (p != NULL)
+    if (L.pHead == NULL)
+    {
+        cout << "List is empty";
+        return;
+    }
+
+    for (DNode *p = L.pHead; p != NULL; p = p->pNext)
     {
         cout << p->info << " ";
+    }
+}
+
+void addHead(DList &L, int x)
+{
+    DNode *p = new DNode;
+    p->info = x;
+    p->pNext = L.pHead;
+    p->pPrev = NULL;
+    if (L.pHead == NULL)
+    {
+        L.pHead = L.pTail = p;
+    }
+    else
+    {
+        L.pHead->pPrev = p;
+        L.pHead = p;
+    }
+}
+
+void addTail(DList &L, int x)
+{
+    DNode *p = new DNode;
+    p->info = x;
+    p->pNext = NULL;
+    p->pPrev = L.pTail;
+    if (L.pHead == NULL)
+    {
+        L.pHead = L.pTail = p;
+    }
+    else
+    {
+        L.pTail->pNext = p;
+        L.pTail = p;
+    }
+}
+
+void addAfter(DList &L, int x, int y)
+{
+    DNode *q = L.pHead;
+    bool found = false;
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q->pNext;
+            p->pPrev = q;
+            if (q->pNext != NULL)
+                q->pNext->pPrev = p;
+            else
+                L.pTail = p;
+            q->pNext = p;
+            found = true;
+            break;
+        }
+        q = q->pNext;
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void addBefore(DList &L, int x, int y)
+{
+    DNode *q = L.pHead;
+    bool found = false;
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q;
+            p->pPrev = q->pPrev;
+            if (q->pPrev != NULL)
+                q->pPrev->pNext = p;
+            else
+                L.pHead = p;
+            q->pPrev = p;
+            found = true;
+            break;
+        }
+        q = q->pNext;
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void addAfterMulti(DList &L, int x, int y)
+{
+    bool found = false;
+    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q->pNext;
+            p->pPrev = q;
+            if (q->pNext != NULL)
+                q->pNext->pPrev = p;
+            else
+                L.pTail = p;
+            q->pNext = p;
+            found = true;
+            q = p;
+        }
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void addBeforeMulti(DList &L, int x, int y)
+{
+    bool found = false;
+    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q;
+            p->pPrev = q->pPrev;
+            if (q->pPrev != NULL)
+                q->pPrev->pNext = p;
+            else
+                L.pHead = p;
+            q->pPrev = p;
+            found = true;
+        }
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void removeHead(DList &L)
+{
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
+    char confirm;
+    cout << "\nDo you want to delete the first element?(y/n): ";
+    cin >> confirm;
+
+    if (confirm == 'y' || confirm == 'Y')
+    {
+        DNode *p = L.pHead;
+        L.pHead = L.pHead->pNext;
+        if (L.pHead == NULL)
+        {
+            L.pTail = NULL;
+            cout << "\nThe list becomes empty";
+        }
+        else
+        {
+            L.pHead->pPrev = NULL;
+        }
+        delete p;
+    }
+}
+
+void removeTail(DList &L)
+{
+    if (L.pTail == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
+    char confirm;
+    cout << "\nDo you want to delete the last element?(y/n): ";
+    cin >> confirm;
+
+    if (confirm == 'y' || confirm == 'Y')
+    {
+        DNode *p = L.pTail;
+        L.pTail = L.pTail->pPrev;
+        if (L.pTail == NULL)
+        {
+            L.pHead = NULL;
+            cout << "\nThe list becomes empty";
+        }
+        else
+        {
+            L.pTail->pNext = NULL;
+        }
+        delete p;
+    }
+}
+
+void removeNode(DList &L, int x)
+{
+    DNode *q = L.pHead;
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            char c;
+            cout << "\nDo you want to delete " << x << " ?(y/n): ";
+            cin >> c;
+            if (c == 'y' || c == 'Y')
+            {
+                if (q->pPrev == NULL)
+                {
+                    L.pHead = q->pNext;
+                    if (L.pHead == NULL)
+                        L.pTail = NULL;
+                    else
+                        L.pHead->pPrev = NULL;
+                }
+                else if (q->pNext == NULL)
+                {
+                    L.pTail = q->pPrev;
+                    L.pTail->pNext = NULL;
+                }
+                else
+                {
+                    q->pPrev->pNext = q->pNext;
+                    q->pNext->pPrev = q->pPrev;
+                }
+                delete q;
+                if (L.pHead == NULL)
+                    cout << "\nThe list becomes empty";
+                return;
+            }
+            break;
+        }
+        q = q->pNext;
+    }
+    if (q == NULL)
+        cout << "\nCan't find the value " << x;
+}
+
+void removeMultiNodeS(DList &L, int x)
+{
+    DNode *p = L.pHead;
+    bool found = false;
+    bool deleteAll = false;
+
+    while (p != NULL)
+    {
+        DNode *nextNode = p->pNext;
+
+        if (p->info == x)
+        {
+            if (!found)
+            {
+                found = true;
+                char c;
+                cout << "\nDo you want to delete " << x << "s ?(y/n): ";
+                cin >> c;
+                if (c == 'y' || c == 'Y')
+                {
+                    deleteAll = true;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            if (deleteAll)
+            {
+                if (p->pPrev == NULL)
+                {
+                    L.pHead = p->pNext;
+                    if (L.pHead == NULL)
+                        L.pTail = NULL;
+                    else
+                        L.pHead->pPrev = NULL;
+                }
+                else if (p->pNext == NULL)
+                {
+                    L.pTail = p->pPrev;
+                    L.pTail->pNext = NULL;
+                }
+                else
+                {
+                    p->pPrev->pNext = p->pNext;
+                    p->pNext->pPrev = p->pPrev;
+                }
+
+                delete p;
+            }
+        }
+        p = nextNode;
+    }
+
+    if (!found)
+        cout << "\nCan't find the value " << x;
+    else if (L.pHead == NULL)
+        cout << "\nThe list becomes empty";
+}
+
+void removeAfter(DList &L, int x)
+{
+    DNode *q = L.pHead;
+    bool found = false;
+
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            found = true;
+
+            if (q->pNext == NULL)
+            {
+                cout << endl
+                     << x << " is the last element. Can't delete the element after it";
+            }
+            else
+            {
+                char c;
+                cout << "\nDo you want to delete the element after " << x << " ?(y/n): ";
+                cin >> c;
+
+                if (c == 'y' || c == 'Y')
+                {
+                    DNode *toDelete = q->pNext;
+                    q->pNext = toDelete->pNext;
+                    if (toDelete->pNext != NULL)
+                    {
+                        toDelete->pNext->pPrev = q;
+                    }
+                    else
+                    {
+                        L.pTail = q;
+                    }
+                    delete toDelete;
+                }
+            }
+            break;
+        }
+        q = q->pNext;
+    }
+
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void removeBefore(DList &L, int x)
+{
+    DNode *q = L.pHead;
+    bool found = false;
+
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            found = true;
+            if (q->pPrev == NULL)
+            {
+                cout << endl
+                     << x << " is the first element. Can't delete the element before it";
+            }
+            else
+            {
+                char c;
+                cout << "\nDo you want to delete the element before " << x << " ?(y/n): ";
+                cin >> c;
+                if (c == 'y' || c == 'Y')
+                {
+                    DNode *toDelete = q->pPrev;
+                    if (toDelete->pPrev != NULL)
+                    {
+                        toDelete->pPrev->pNext = q;
+                        q->pPrev = toDelete->pPrev;
+                    }
+                    else
+                    {
+                        L.pHead = q;
+                        q->pPrev = NULL;
+                    }
+                    delete toDelete;
+                }
+            }
+            break;
+        }
+        q = q->pNext;
+    }
+
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void removeMultiAfters(DList &L, int x)
+{
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
+    DNode *p = L.pHead;
+    bool found = false;
+    bool deleteAll = false;
+
+    while (p != NULL)
+    {
+        if (p->info == x)
+        {
+            found = true;
+            if (p->pNext != NULL)
+            {
+                deleteAll = true;
+            }
+        }
         p = p->pNext;
+    }
+
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+        return;
+    }
+    else if (found && !deleteAll)
+    {
+        cout << "\nList has only one " << x << " and " << x << " is the last element. Can't delete the element after it";
+        return;
+    }
+    else
+    {
+        char c;
+        cout << "\nDo you want to delete all elements after " << x << " ?(y/n): ";
+        cin >> c;
+
+        if (c == 'y' || c == 'Y')
+        {
+            p = L.pHead;
+            while (p != NULL)
+            {
+                if (p->info == x)
+                {
+                    DNode *toDelete = p->pNext;
+                    while (toDelete != NULL)
+                    {
+                        DNode *temp = toDelete;
+                        toDelete = toDelete->pNext;
+
+                        if (temp->pNext != NULL)
+                        {
+                            temp->pNext->pPrev = p;
+                        }
+                        else
+                        {
+                            L.pTail = p;
+                        }
+                        delete temp;
+                    }
+                    break;
+                }
+                p = p->pNext;
+            }
+        }
+    }
+}
+
+void removeMultiBefores(DList &L, int x)
+{
+    DNode *p = L.pHead;
+    bool found = false;
+    bool deleteAll = false;
+
+    while (p != NULL)
+    {
+        if (p->info == x)
+        {
+            found = true;
+            if (p->pPrev != NULL)
+            {
+                deleteAll = true;
+            }
+        }
+        p = p->pNext;
+    }
+
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+    else if (found && !deleteAll)
+    {
+        cout << "\nList has only one " << x << " and " << x << " is the first element. Can't delete the element before it";
+    }
+    else
+    {
+        char c;
+        cout << "\nDo you want to delete all elements before " << x << " ?(y/n): ";
+        cin >> c;
+        if (c == 'y' || c == 'Y')
+        {
+            p = L.pHead;
+            while (p != NULL)
+            {
+                if (p->info == x)
+                {
+                    if (p->pPrev != NULL)
+                    {
+                        DNode *toDelete = p->pPrev;
+                        p->pPrev = toDelete->pPrev;
+                        if (toDelete->pPrev != NULL)
+                            toDelete->pPrev->pNext = p;
+                        else
+                        {
+                            L.pHead = p;
+                        }
+                        delete toDelete;
+                    }
+                }
+                p = p->pNext;
+            }
+        }
+    }
+}
+
+void removeAll(DList &L)
+{
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
+    char c;
+    cout << "\nDo you want to delete all elements?(y/n): ";
+    cin >> c;
+
+    if (c == 'y' || c == 'Y')
+    {
+        DNode *p = L.pHead;
+        while (p != NULL)
+        {
+            DNode *toDelete = p;
+            p = p->pNext;
+            delete toDelete;
+        }
+        L.pHead = L.pTail = NULL;
+        cout << "\nThe list becomes empty";
     }
 }
 

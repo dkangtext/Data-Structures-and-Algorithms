@@ -100,6 +100,63 @@ void addTail(DList &L, int x)
 
 void addAfter(DList &L, int x, int y)
 {
+    DNode *q = L.pHead;
+    bool found = false;
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q->pNext;
+            p->pPrev = q;
+            if (q->pNext != NULL)
+                q->pNext->pPrev = p;
+            else
+                L.pTail = p;
+            q->pNext = p;
+            found = true;
+            break;
+        }
+        q = q->pNext;
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void addBefore(DList &L, int x, int y)
+{
+    DNode *q = L.pHead;
+    bool found = false;
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q;
+            p->pPrev = q->pPrev;
+            if (q->pPrev != NULL)
+                q->pPrev->pNext = p;
+            else
+                L.pHead = p;
+            q->pPrev = p;
+            found = true;
+            break;
+        }
+        q = q->pNext;
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void addAfterMulti(DList &L, int x, int y)
+{
+    bool found = false;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
@@ -108,22 +165,24 @@ void addAfter(DList &L, int x, int y)
             p->info = y;
             p->pNext = q->pNext;
             p->pPrev = q;
-            if (q->pNext == NULL)
-            {
-                L.pTail = p;
-            }
-            else
-            {
+            if (q->pNext != NULL)
                 q->pNext->pPrev = p;
-            }
+            else
+                L.pTail = p;
             q->pNext = p;
-            break;
+            found = true;
+            q = p;
         }
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
     }
 }
 
-void addBefore(DList &L, int x, int y)
+void addBeforeMulti(DList &L, int x, int y)
 {
+    bool found = false;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
@@ -132,64 +191,17 @@ void addBefore(DList &L, int x, int y)
             p->info = y;
             p->pNext = q;
             p->pPrev = q->pPrev;
-            if (q->pPrev == NULL)
-            {
-                L.pHead = p;
-            }
-            else
-            {
+            if (q->pPrev != NULL)
                 q->pPrev->pNext = p;
-            }
+            else
+                L.pHead = p;
             q->pPrev = p;
-            break;
+            found = true;
         }
     }
-}
-
-void addAfterMulti(DList &L, int x, int y)
-{
-    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
+    if (!found)
     {
-        if (q->info == x)
-        {
-            DNode *tmp = new DNode;
-            tmp->info = y;
-            tmp->pNext = q->pNext;
-            tmp->pPrev = q;
-            if (q->pNext == NULL)
-            {
-                L.pTail = tmp;
-            }
-            else
-            {
-                q->pNext->pPrev = tmp;
-            }
-            q->pNext = tmp;
-            q = tmp;
-        }
-    }
-}
-
-void addBeforeMulti(DList &L, int x, int y)
-{
-    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
-    {
-        if (q->info == x)
-        {
-            DNode *tmp = new DNode;
-            tmp->info = y;
-            tmp->pNext = q;
-            tmp->pPrev = q->pPrev;
-            if (q->pPrev == NULL)
-            {
-                L.pHead = tmp;
-            }
-            else
-            {
-                q->pPrev->pNext = tmp;
-            }
-            q->pPrev = tmp;
-        }
+        cout << "\nCan't find the value " << x;
     }
 }
 
@@ -269,7 +281,7 @@ void removeNode(DList &L, int x)
             cin >> c;
             if (c == 'y' || c == 'Y')
             {
-                if (q->pPrev == NULL) // xóa đầu
+                if (q->pPrev == NULL)
                 {
                     L.pHead = q->pNext;
                     if (L.pHead == NULL)
@@ -277,17 +289,17 @@ void removeNode(DList &L, int x)
                     else
                         L.pHead->pPrev = NULL;
                 }
-                else if (q->pNext == NULL) // xóa cuối
+                else if (q->pNext == NULL)
                 {
                     L.pTail = q->pPrev;
                     L.pTail->pNext = NULL;
                 }
-                else // xóa ở giữa
+                else
                 {
                     q->pPrev->pNext = q->pNext;
                     q->pNext->pPrev = q->pPrev;
                 }
-                delete q; // Giải phóng bộ nhớ của nút xóa
+                delete q;
                 if (L.pHead == NULL)
                     cout << "\nThe list becomes empty";
                 return;
@@ -307,41 +319,56 @@ void removeMultiNodeS(DList &L, int x)
         cout << "\nList is empty. Can't delete";
         return;
     }
-    
-    char c;
-    cout << "\nDo you want to delete " << x << "s ?(y/n): ";
-    cin >> c;
-    if (c != 'y' && c != 'Y')
-        return;
 
     DNode *p = L.pHead;
     bool found = false;
+    bool deleteAll = false;
 
     while (p != NULL)
     {
         DNode *nextNode = p->pNext;
+
         if (p->info == x)
         {
-            found = true;
-            if (p->pPrev == NULL) // xóa đầu
+            if (!found)
             {
-                L.pHead = p->pNext;
-                if (L.pHead == NULL)
-                    L.pTail = NULL;
+                found = true;
+                char c;
+                cout << "\nDo you want to delete " << x << "s ?(y/n): ";
+                cin >> c;
+                if (c == 'y' || c == 'Y')
+                {
+                    deleteAll = true;
+                }
                 else
-                    L.pHead->pPrev = NULL;
+                {
+                    return;
+                }
             }
-            else if (p->pNext == NULL) // xóa cuối
+
+            if (deleteAll)
             {
-                L.pTail = p->pPrev;
-                L.pTail->pNext = NULL;
+                if (p->pPrev == NULL)
+                {
+                    L.pHead = p->pNext;
+                    if (L.pHead == NULL)
+                        L.pTail = NULL;
+                    else
+                        L.pHead->pPrev = NULL;
+                }
+                else if (p->pNext == NULL)
+                {
+                    L.pTail = p->pPrev;
+                    L.pTail->pNext = NULL;
+                }
+                else
+                {
+                    p->pPrev->pNext = p->pNext;
+                    p->pNext->pPrev = p->pPrev;
+                }
+
+                delete p;
             }
-            else // xóa ở giữa
-            {
-                p->pPrev->pNext = p->pNext;
-                p->pNext->pPrev = p->pPrev;
-            }
-            delete p; // Giải phóng bộ nhớ của nút xóa
         }
         p = nextNode;
     }
@@ -357,7 +384,6 @@ int main()
     DList L;
     init(L);
     int x, y, choice;
-    char c;
 
     cout << "MENU:";
     cout << "\n1. Create a DList";

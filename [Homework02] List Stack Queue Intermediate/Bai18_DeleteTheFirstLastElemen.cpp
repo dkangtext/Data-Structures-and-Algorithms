@@ -100,6 +100,63 @@ void addTail(DList &L, int x)
 
 void addAfter(DList &L, int x, int y)
 {
+    DNode *q = L.pHead;
+    bool found = false;
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q->pNext;
+            p->pPrev = q;
+            if (q->pNext != NULL)
+                q->pNext->pPrev = p;
+            else
+                L.pTail = p;
+            q->pNext = p;
+            found = true;
+            break;
+        }
+        q = q->pNext;
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void addBefore(DList &L, int x, int y)
+{
+    DNode *q = L.pHead;
+    bool found = false;
+    while (q != NULL)
+    {
+        if (q->info == x)
+        {
+            DNode *p = new DNode;
+            p->info = y;
+            p->pNext = q;
+            p->pPrev = q->pPrev;
+            if (q->pPrev != NULL)
+                q->pPrev->pNext = p;
+            else
+                L.pHead = p;
+            q->pPrev = p;
+            found = true;
+            break;
+        }
+        q = q->pNext;
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
+    }
+}
+
+void addAfterMulti(DList &L, int x, int y)
+{
+    bool found = false;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
@@ -108,22 +165,24 @@ void addAfter(DList &L, int x, int y)
             p->info = y;
             p->pNext = q->pNext;
             p->pPrev = q;
-            if (q->pNext == NULL)
-            {
-                L.pTail = p;
-            }
-            else
-            {
+            if (q->pNext != NULL)
                 q->pNext->pPrev = p;
-            }
+            else
+                L.pTail = p;
             q->pNext = p;
-            break;
+            found = true;
+            q = p; 
         }
+    }
+    if (!found)
+    {
+        cout << "\nCan't find the value " << x;
     }
 }
 
-void addBefore(DList &L, int x, int y)
+void addBeforeMulti(DList &L, int x, int y)
 {
+    bool found = false;
     for (DNode *q = L.pHead; q != NULL; q = q->pNext)
     {
         if (q->info == x)
@@ -132,64 +191,17 @@ void addBefore(DList &L, int x, int y)
             p->info = y;
             p->pNext = q;
             p->pPrev = q->pPrev;
-            if (q->pPrev == NULL)
-            {
-                L.pHead = p;
-            }
-            else
-            {
+            if (q->pPrev != NULL)
                 q->pPrev->pNext = p;
-            }
+            else
+                L.pHead = p;
             q->pPrev = p;
-            break;
+            found = true;
         }
     }
-}
-
-void addAfterMulti(DList &L, int x, int y)
-{
-    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
+    if (!found)
     {
-        if (q->info == x)
-        {
-            DNode *tmp = new DNode;
-            tmp->info = y;
-            tmp->pNext = q->pNext;
-            tmp->pPrev = q;
-            if (q->pNext == NULL)
-            {
-                L.pTail = tmp;
-            }
-            else
-            {
-                q->pNext->pPrev = tmp;
-            }
-            q->pNext = tmp;
-            q = tmp;
-        }
-    }
-}
-
-void addBeforeMulti(DList &L, int x, int y)
-{
-    for (DNode *q = L.pHead; q != NULL; q = q->pNext)
-    {
-        if (q->info == x)
-        {
-            DNode *tmp = new DNode;
-            tmp->info = y;
-            tmp->pNext = q;
-            tmp->pPrev = q->pPrev;
-            if (q->pPrev == NULL)
-            {
-                L.pHead = tmp;
-            }
-            else
-            {
-                q->pPrev->pNext = tmp;
-            }
-            q->pPrev = tmp;
-        }
+        cout << "\nCan't find the value " << x;
     }
 }
 
