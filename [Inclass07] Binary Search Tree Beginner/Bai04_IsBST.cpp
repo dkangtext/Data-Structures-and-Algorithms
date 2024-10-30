@@ -66,6 +66,7 @@ void SetLeft()
 {
     
 }
+
 int main()
 {
 	Tree T = NULL;

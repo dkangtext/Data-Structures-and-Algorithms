@@ -11,7 +11,7 @@ int main()
     list<int> lst;
     for (int i = 1; i <= n; i++)
     {
-        lst.push_back(i); // Khởi tạo danh sách theo thứ tự mã số sinh viên
+        lst.push_back(i); 
     }
 
     unordered_map<int, list<int>::iterator> idx;

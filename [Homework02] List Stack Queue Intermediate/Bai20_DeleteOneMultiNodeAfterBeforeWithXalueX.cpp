@@ -165,6 +165,7 @@ void addAfterMulti(DList &L, int x, int y)
             p->info = y;
             p->pNext = q->pNext;
             p->pPrev = q;
+
             if (q->pNext != NULL)
                 q->pNext->pPrev = p;
             else
@@ -265,6 +266,12 @@ void removeTail(DList &L)
 
 void removeNode(DList &L, int x)
 {
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
     DNode *q = L.pHead;
     while (q != NULL)
     {
@@ -308,6 +315,12 @@ void removeNode(DList &L, int x)
 
 void removeMultiNodeS(DList &L, int x)
 {
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
     DNode *p = L.pHead;
     bool found = false;
     bool deleteAll = false;
@@ -369,6 +382,12 @@ void removeMultiNodeS(DList &L, int x)
 
 void removeAfter(DList &L, int x)
 {
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
     DNode *q = L.pHead;
     bool found = false;
 
@@ -388,7 +407,6 @@ void removeAfter(DList &L, int x)
                 char c;
                 cout << "\nDo you want to delete the element after " << x << " ?(y/n): ";
                 cin >> c;
-
                 if (c == 'y' || c == 'Y')
                 {
                     DNode *toDelete = q->pNext;
@@ -417,6 +435,12 @@ void removeAfter(DList &L, int x)
 
 void removeBefore(DList &L, int x)
 {
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
     DNode *q = L.pHead;
     bool found = false;
 
@@ -473,15 +497,51 @@ void removeMultiAfters(DList &L, int x)
     DNode *p = L.pHead;
     bool found = false;
     bool deleteAll = false;
+    int dem = 0;
 
     while (p != NULL)
     {
         if (p->info == x)
         {
+            dem++;
             found = true;
-            if (p->pNext != NULL)
+            if (p->pNext == NULL && dem == 1)
             {
-                deleteAll = true;
+                cout << "\nList has only one " << x << " and " << x << " is the last element. Can't delete the element after it";
+            }
+            else if (p->pNext != NULL)
+            {
+                if (!deleteAll)
+                {
+                    char c;
+                    cout << "\nDo you want to delete all elements after " << x << " ?(y/n): ";
+                    cin >> c;
+                    if (c == 'y' || c == 'Y')
+                    {
+                        deleteAll = true;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                if (deleteAll)
+                {
+                    DNode *toDelete = p->pNext;
+                    p->pNext = toDelete->pNext;
+
+                    if (toDelete->pNext != NULL)
+                    {
+                        toDelete->pNext->pPrev = p;
+                    }
+                    else
+                    {
+                        L.pTail = p;
+                    }
+
+                    delete toDelete;
+                }
             }
         }
         p = p->pNext;
@@ -490,52 +550,17 @@ void removeMultiAfters(DList &L, int x)
     if (!found)
     {
         cout << "\nCan't find the value " << x;
-        return;
-    }
-    else if (found && !deleteAll)
-    {
-        cout << "\nList has only one " << x << " and " << x << " is the last element. Can't delete the element after it";
-        return;
-    }
-    else
-    {
-        char c;
-        cout << "\nDo you want to delete all elements after " << x << " ?(y/n): ";
-        cin >> c;
-
-        if (c == 'y' || c == 'Y')
-        {
-            p = L.pHead;
-            while (p != NULL)
-            {
-                if (p->info == x)
-                {
-                    DNode *toDelete = p->pNext;
-                    while (toDelete != NULL)
-                    {
-                        DNode *temp = toDelete;
-                        toDelete = toDelete->pNext;
-
-                        if (temp->pNext != NULL)
-                        {
-                            temp->pNext->pPrev = p;
-                        }
-                        else
-                        {
-                            L.pTail = p;
-                        }
-                        delete temp;
-                    }
-                    break;
-                }
-                p = p->pNext;
-            }
-        }
     }
 }
 
 void removeMultiBefores(DList &L, int x)
 {
+    if (L.pHead == NULL)
+    {
+        cout << "\nList is empty. Can't delete";
+        return;
+    }
+
     DNode *p = L.pHead;
     bool found = false;
     bool deleteAll = false;
