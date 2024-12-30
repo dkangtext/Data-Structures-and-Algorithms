@@ -35,8 +35,6 @@ void add_tail(List &l, int x)
     Node *p = new Node;
     p->val = x;
     p->next = NULL;
-void xuat(List &l);
-void print_longest_increasing_sub_list(List &l);
     if (l.head == NULL)
     {
         l.head = l.tail = p;
@@ -58,7 +56,6 @@ void xuat(List &l)
 }
 
 // ###INSERT CODE HERE -
-
 void NhapNode(DATHUC &b, double hs, int x)
 {
     Node *p = new Node;
@@ -259,7 +256,6 @@ int Tong2DaThuc(DATHUC &a, DATHUC &b)
     Xuat(c);
     return 0;
 }
-
 void Xuat(int t)
 {
     int a = t;

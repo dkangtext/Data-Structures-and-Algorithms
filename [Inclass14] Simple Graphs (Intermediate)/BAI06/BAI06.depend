@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1733542498 source:d:\data structures and algorithms\[inclass14] simple graphs (intermediate)\bai06\main.cpp
+	<iostream>
+	<vector>
+	<queue>
+	<algorithm>
+

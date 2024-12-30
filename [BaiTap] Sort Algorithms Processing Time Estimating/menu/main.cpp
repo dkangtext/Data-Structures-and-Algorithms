@@ -3,205 +3,224 @@
 #include <stdlib.h>
 #include <cstring>
 
-//
-
 using namespace std;
 
-void selectionSort(int *, int);
-void interchangeSort(int *, int);
-void insertionSort(int *, int);
-void binaryInsertionSort(int *, int);
-void bubbleSort(int *, int);
-void shakerSort(int *, int, int);
-void countingSort(int *, int); // https://www.geeksforgeeks.org/counting-sort/
-void quickSort(int *, int, int);
-void mergeSort(int *, int, int);
-void heapSort(int *, int); // source code: https://www.sortvisualizer.com/heapsort/
-void shellSort(int *, int);
-void radixSort(int *, int); // source code: https://www.sortvisualizer.com/radixSort/
-int getInteger();
-void generateArray(int *, int);
-void copyArray(int *, int *, int);
-void Menu();
-void toPositive(int *, int *, int);
-
-int getInteger()
+// SELECTION SORT
+void selectionSort(int a[], int n)
 {
-    int n;
-    cout << "Enter the array's size: ";
-    do
+    for (int i = 0; i < n - 1; i++)
     {
-        cin >> n;
-        if (n <= 10000)
-            cout << "Enter the array's size again: ";
-    } while (n <= 10000);
-    return n;
-}
+        int minIndex = i;
 
-void generateArray(int *a, int n)
-{
-    srand(time(NULL));
-    for (int i = 0; i < n; i++)
-        a[i] = -100000 + rand() % 20001;
-}
-
-void copyArray(int *a, int *b, int n)
-{
-    for (int i = 0; i < n; i++)
-        b[i] = a[i];
-}
-
-void Menu()
-{
-    cout << "\n-------MENU-------" << endl;
-    cout << "1.Selection Sort" << endl;
-    cout << "2.Interchange Sort" << endl;
-    cout << "3.Insertion Sort" << endl;
-    cout << "4.Binary Insertion Sort" << endl;
-    cout << "5.Bubble Sort" << endl;
-    cout << "6.Shaker Sort" << endl;
-    cout << "7.Counting Sort" << endl;
-    cout << "8.Quick Sort" << endl;
-    cout << "9.Merge Sort" << endl;
-    cout << "10.Heap Sort" << endl;
-    cout << "11.Shell Sort" << endl;
-    cout << "12.Radix Sort" << endl;
-    cout << "13.Exit" << endl;
-    cout << "Choose an algorithm: " << endl;
-}
-
-void selectionSort(int *a, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        int min = i;
         for (int j = i + 1; j < n; j++)
         {
-            if (a[j] < a[min])
-                min = j;
+            if (a[j] < a[minIndex])
+            {
+                minIndex = j;
+            }
         }
-        swap(a[i], a[min]);
+
+        if (minIndex != i)
+        {
+            int temp = a[i];
+            a[i] = a[minIndex];
+            a[minIndex] = temp;
+        }
     }
 }
 
-void interchangeSort(int *a, int n)
+// INTERCHANGE SORT
+void interchangeSort(int a[], int n)
 {
-    for (int i = 0; i <= n - 2; i++)
+    for (int i = 0; i < n - 1; i++)
     {
-        for (int j = i + 1; j <= n - 1; j++)
+        for (int j = i + 1; j < n; j++)
+        {
             if (a[i] > a[j])
-                swap(a[i], a[j]);
+            {
+                int temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+        }
     }
 }
 
-void insertionSort(int *a, int n)
+// INSERTION SORT
+void insertionSort(int a[], int n)
 {
     for (int i = 1; i < n; i++)
     {
-        int x = a[i];
-        int j;
-        for (j = i - 1; j >= 0; j--)
+        int key = a[i];
+        int j = i - 1;
+
+        while (j >= 0 && a[j] > key)
         {
-            if (x < a[j])
-                a[j + 1] = a[j];
-            else
-                break;
+            a[j + 1] = a[j];
+            j--;
         }
-        a[j + 1] = x;
+
+        a[j + 1] = key;
     }
+}
+
+// BINARY INSERTION SORT
+int binarySearch(int *a, int item, int low, int high)
+{
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (item == a[mid])
+            return mid + 1;
+        else if (item > a[mid])
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return low;
 }
 
 void binaryInsertionSort(int *a, int n)
 {
-    for (int i = 1; i < n; i++)
+    int i, locate, j, selected;
+
+    for (i = 1; i < n; ++i)
     {
-        int x = a[i];
-        int l = 0;
-        int r = i - 1;
-        while (l <= r)
+        j = i - 1;
+        selected = a[i];
+
+        locate = binarySearch(a, selected, 0, j);
+
+        while (j >= locate)
         {
-            int mid = (l + r) / 2;
-            if (x < a[mid])
-                r = mid - 1;
-            else
-                l = mid + 1;
-        }
-        for (int j = i - 1; j >= l; j--)
             a[j + 1] = a[j];
-        a[l] = x;
+            j--;
+        }
+        a[j + 1] = selected;
     }
 }
 
-void bubbleSort(int *a, int n)
+// BUBBLE SORT
+void BubbleSort(int *a, int n)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n - 1; i++)
     {
-        for (int j = 0; j < n - 1; j++)
+        bool s = false;
+        for (int j = 0; j < n - i - 1; j++)
+        {
             if (a[j] > a[j + 1])
+            {
                 swap(a[j], a[j + 1]);
+                s = true;
+            }
+        }
+        if (!s)
+            break;
     }
 }
 
-void shakerSort(int *a, int l, int r)
+// SHAKER SORT
+void ShakeSort(int *arr, int size)
 {
-    int i = l;
-    int j = r;
-    int ping = 0;
-    while (l < r)
+    int left = 0;
+    int right = size - 1;
+    bool swapped = true;
+
+    while (swapped)
     {
-        for (int i = l; i < r; i++)
+        swapped = false;
+
+        for (int i = left; i < right; i++)
         {
-            if (a[i] > a[i + 1])
+            if (arr[i] > arr[i + 1])
             {
-                swap(a[i], a[i + 1]);
-                ping = i;
+                swap(arr[i], arr[i + 1]);
+                swapped = true;
             }
         }
-        r = ping;
-        for (int j = r; j > l; j--)
+        right--;
+
+        for (int i = right; i > left; i--)
         {
-            if (a[j] < a[j - 1])
+            if (arr[i] < arr[i - 1])
             {
-                swap(a[j], a[j - 1]);
-                ping = j;
+                swap(arr[i], arr[i - 1]);
+                swapped = true;
             }
         }
-        l = ping;
+        left++;
     }
+}
+
+// COUNTING SORT
+void countSort(int *a, int n, int exp)
+{
+    int output[n];
+    int i, count[10] = {0};
+    for (i = 0; i < n; i++)
+        count[(a[i] / exp) % 10]++;
+
+    for (i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    for (i = n - 1; i >= 0; i--)
+    {
+        output[count[(a[i] / exp) % 10] - 1] = a[i];
+        count[(a[i] / exp) % 10]--;
+    }
+
+    for (i = 0; i < n; i++)
+        a[i] = output[i];
+}
+
+// QUICK SORT
+void swap(int &a, int &b)
+{
+    int temp = a;
+    a = b;
+    b = temp;
 }
 
 void quickSort(int *a, int l, int r)
 {
-    int x = a[(l + r) / 2]; // xac dinh gia tri truc x(phan tu chinh giua)
-    int i = l;              // khoi tao dau doc i
-    int j = r;              // khoi tao dau doc j
+    if (l >= r)
+        return;
+
+    int x = a[l + rand() % (r - l + 1)];
+    int i = l;
+    int j = r;
+
     while (i <= j)
     {
         while (a[i] < x)
-            i++; // cho i chay den khi gap gia tri >=x thi dung
+            i++;
 
         while (a[j] > x)
-            j--; // cho j chay den khi gap gia tri <=x thi dung
+            j--;
 
         if (i <= j)
         {
             swap(a[i], a[j]);
             i++;
             j--;
-        } // hoan vi 2 phan tu tai i,j sau do tang i, giam j de bat dau cho vi tri moi
+        }
     }
+
     if (l < j)
         quickSort(a, l, j);
     if (i < r)
-        quickSort(a, i, r); // tiep tuc cho i,j chay nen lap tu buoc 3 den buoc 5 cho den khi j vuot qua i thi dung
+        quickSort(a, i, r);
 }
 
+// MERGE SORT
 void Merge(int *a, int left, int mid, int right)
 {
     int *temp = new int[right - left + 1];
+
     int m = 0;
     int i = left;
     int j = mid + 1;
+
     while (!(i > mid && j > right))
     {
         if ((i <= mid && j <= right && a[i] < a[j]) || j > right)
@@ -209,6 +228,7 @@ void Merge(int *a, int left, int mid, int right)
         else
             temp[m++] = a[j++];
     }
+
     for (int i = 0; i < m; i++)
         a[left + i] = temp[i];
     delete[] temp;
@@ -225,6 +245,7 @@ void mergeSort(int *a, int l, int r)
     }
 }
 
+// HEAP SORT
 void Heapify(int *a, int n, int i)
 {
     int largest = i;
@@ -252,14 +273,15 @@ void heapSort(int *a, int n)
     }
 }
 
+// SHELL SORT
 void shellSort(int *a, int n)
-{ // bai nay se cho i chay tu gap den cuoi mang,sau do tao bien j de so sanh j voi cac bien truoc so gap
+{
     for (int gap = n / 2; gap > 0; gap /= 2)
-    { // tinh khoang cach de phan hoach mang
+    {
         for (int i = gap; i < n; i++)
         {
-            int j = i;       // gan i tai vi tri j
-            int temp = a[i]; // tao bien trung gian
+            int j = i;
+            int temp = a[i];
             for (j = i; j >= gap && temp < a[j - gap]; j -= gap)
             {
                 a[j] = a[j - gap];
@@ -269,6 +291,7 @@ void shellSort(int *a, int n)
     }
 }
 
+// RADIX SORT
 int getMax(int *a, int n)
 {
     int max = a[0];
@@ -280,26 +303,6 @@ int getMax(int *a, int n)
     return max;
 }
 
-void countSort(int *a, int n, int exp)
-{
-    int output[n];
-    int i, count[10] = {0};
-    for (i = 0; i < n; i++)
-        count[(a[i] / exp) % 10]++;
-
-    for (i = 1; i < 10; i++)
-        count[i] += count[i - 1];
-
-    for (i = n - 1; i >= 0; i--)
-    {
-        output[count[(a[i] / exp) % 10] - 1] = a[i];
-        count[(a[i] / exp) % 10]--;
-    }
-
-    for (i = 0; i < n; i++)
-        a[i] = output[i];
-}
-
 void radixSort(int *a, int n)
 {
     int m = getMax(a, n);
@@ -307,31 +310,49 @@ void radixSort(int *a, int n)
         countSort(a, n, exp);
 }
 
-void toPositive(int *b, int *c, int n)
+int getInteger()
 {
-    for (int i = 0; i < n; i++)
-        c[i] = abs(b[i]);
+    int n;
+    cout << "Please enter a number in range 1 to 1 000 000: ";
+    while (true)
+    {
+        cin >> n;
+        if (n >= 1 && n <= 1000000)
+            break;
+        cout << "Invalid input. Please enter a number in range 1 to 1 000 000: ";
+    }
+    return n;
 }
 
-void countingSort(int *a, int n)
+void generateArray(int *a, int n)
 {
-    int max = getMax(a, n);
-    int *outputArray = new int[10000000];
-    int *countArray = new int[10000000];
-    memset(countArray, 0, 1000);
+    srand(time(NULL));
     for (int i = 0; i < n; i++)
-        countArray[a[i]]++;
-    for (int i = 1; i <= max; i++)
-        countArray[i] += countArray[i - 1];
-    for (int i = n - 1; i >= 0; i--)
-    {
-        outputArray[countArray[a[i]] - 1] = a[i];
-        countArray[a[i]]--;
-    }
+        a[i] = rand() % 1000000;
+}
+
+void copyArray(int *a, int *b, int n)
+{
     for (int i = 0; i < n; i++)
-        a[i] = outputArray[i];
-    delete[] countArray;
-    delete[] outputArray;
+        b[i] = a[i];
+}
+
+void Menu()
+{
+    cout << "\n-- -- -- -MENU-- -- -- -" << endl;
+    cout << " 1.Selection Sort " << endl;
+    cout << " 2.Interchange Sort " << endl;
+    cout << " 3.Insertion Sort " << endl;
+    cout << " 4.Binary Insertion Sort " << endl;
+    cout << " 5.Bubble Sort " << endl;
+    cout << " 6.Shaker Sort " << endl;
+    cout << " 7.Counting Sort " << endl;
+    cout << " 8.Quick Sort " << endl;
+    cout << " 9.Merge Sort " << endl;
+    cout << " 10.Heap Sort " << endl;
+    cout << " 11.Shell Sort " << endl;
+    cout << " 12.Radix Sort " << endl;
+    cout << " Please choose an algorithm (Enter an interger): " << endl;
 }
 
 int main()
@@ -339,140 +360,89 @@ int main()
     int n = getInteger();
     int *a = new int[n];
     generateArray(a, n);
-    while (1)
+
+    while (true)
     {
         int *b = new int[n];
         copyArray(a, b, n);
+
         Menu();
+
         int choose;
         cin >> choose;
+
+        if (choose < 1 || choose > 12)
+        {
+            cout << "See you again!" << endl;
+            delete[] b;
+            break;
+        }
+
+        clock_t start = clock();
+
         switch (choose)
         {
         case 1:
-        {
-            clock_t start = clock();
             selectionSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
-        }
         case 2:
-        {
-            clock_t start = clock();
             interchangeSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
-        }
         case 3:
-        {
-            clock_t start = clock();
             insertionSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
-        }
         case 4:
-        {
-            clock_t start = clock();
             binaryInsertionSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
-        }
         case 5:
-        {
-            clock_t start = clock();
-            bubbleSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
+            BubbleSort(b, n);
             break;
-        }
         case 6:
-        {
-            clock_t start = clock();
-            shakerSort(b, 0, n - 1);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
+            ShakeSort(b, n);
             break;
-        }
         case 7:
-        {
-            int *c = new int[n];
-            toPositive(b, c, n);
-            clock_t start = clock();
-            countingSort(c, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
-            delete[] c;
+            countSort(b, n, 1);
             break;
-        }
         case 8:
-        {
-            clock_t start = clock();
             quickSort(b, 0, n - 1);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
-        }
         case 9:
-        {
-            clock_t start = clock();
-            mergeSort(a, 0, n - 1);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
+            mergeSort(b, 0, n - 1);
             break;
-        }
         case 10:
-        {
-            clock_t start = clock();
             heapSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
-        }
         case 11:
-        {
-            clock_t start = clock();
             shellSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
-        }
         case 12:
-        {
-            clock_t start = clock();
             radixSort(b, n);
-            clock_t end = clock();
-            cout << "Time: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
             break;
         }
-        }
-        if (choose == 13)
+
+        clock_t end = clock();
+        cout << "Time taken: " << (double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
+
+        delete[] b;
+        
+        cout << "Do you want to continue? (y/n): ";
+        char c;
+        cin >> c;
+
+        if (c == 'n' || c == 'N')
         {
-            cout << "See you again";
+            cout << "See you again!" << endl;
             break;
         }
-        else
+        else if (c != 'y' && c != 'Y')
         {
-            cout << "Do you want to continue ? (Y/N)" << endl;
-            char c;
-            cin >> c;
-            if (c == 'N' || c == 'n')
-            {
-                cout << "See you again!";
-                delete[] b;
-                break;
-            }
-            else if (c == 'Y' || c == 'y')
-                continue;
-            else
-            {
-                cout << "Nhap cai gi vay ?";
-                break;
-            }
+            cout << "Invalid input. See you again!" << endl;
+            break;
         }
+
+        generateArray(a, n);
     }
+
     delete[] a;
     return 0;
 }

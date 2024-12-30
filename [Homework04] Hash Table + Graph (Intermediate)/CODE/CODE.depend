@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1734761176 source:d:\data structures and algorithms\[homework04] hash table + graph (intermediate)\code\main.cpp
+	<iostream>
+	<unordered_map>
+	<unordered_set>
+	<vector>
+	<string>
+
